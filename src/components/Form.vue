@@ -247,8 +247,12 @@ export default {
       this.errorStopLoss = ""
       if (this.stopLoss > this.sumInv && this.boundaryUnits == "$") {
         this.errorStopLoss = "Не может быть больше $ " + this.sumInv;
+      } else if (this.stopLoss < parseInt(this.sumInv*0.10) && this.boundaryUnits == "$") {
+        this.errorStopLoss = "Не может быть меньше $ " + parseInt(this.sumInv * 0.1);
       } else if (this.stopLoss > 100 && this.boundaryUnits == "%") {
         this.errorStopLoss = "Не может быть больше 100%";
+      } else if  (this.stopLoss < 10 && this.boundaryUnits == "%") {
+        this.errorStopLoss = "Не может быть меньше 10%";
       }
     },
 
