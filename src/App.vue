@@ -1,14 +1,14 @@
 <template>
-  <Form2 />
+  <Form />
 </template>
 
 <script>
-import Form2 from "./components/Form2.vue"
+import Form from "./components/Form.vue"
 
 export default {
   name: 'App',
   components: {
-    Form2
+    Form
   }
 }
 </script>
@@ -24,7 +24,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 12px;
-  color: #2c3e50;
   background: #ececec;
 }
 

@@ -19,8 +19,6 @@
               <MyNumberInput
                 class="inputItem"
                 v-model="sumInv"
-                @focus="errorSumInv = ''"
-                @blur="errorSumHandler"
               />
             </div>
           </div>
@@ -41,7 +39,6 @@
                 class="inputItem"
                 type="text"
                 v-model="mult"
-                @focus="errorMult = ''"
                 @mouseover="sliderVisible = true"
               />
             </div>
@@ -97,14 +94,12 @@
                 name="radiobutton"
                 value="%"
                 v-model="boundaryUnits"
-                @click="setInPercent"
               /><label>%</label>
               <input
                 type="radio"
                 name="radiobutton"
                 value="$"
                 v-model="boundaryUnits"
-                @click="setInUsd"
               />
               <label>$</label>
             </div>
@@ -129,7 +124,6 @@
                   class="inputItem"
                   v-model="takeProfit"
                   :disabled="!isTakeProfit"
-                  @focus="errorTakeProfit = ''"
                 />
                 <InputNumberArrows class="inputAddon" v-model="takeProfit" :disabled="!isTakeProfit"/>
               </div>
@@ -157,7 +151,6 @@
                   class="inputItem"
                   v-model="stopLoss"
                   :disabled="!isStopLoss"
-                  @focus="errorStopLoss = ''"
                 />
                 <InputNumberArrows class="inputAddon" v-model="stopLoss" :disabled="!isStopLoss"/>
               </div>
@@ -190,16 +183,12 @@
 </template>
 
 <script>
-// import { NumberInput } from 'vue-intl-number-input'
-//import NumberInput from "./NumberInput";
 import MyNumberInput from "./MyNumberInput";
 import InputNumberArrows from "./InputNumberArrows"
 
-
 export default {
-  name: "Form2",
+  name: "Form",
   components: {
-    //    NumberInput,
     MyNumberInput,
     InputNumberArrows
   },
@@ -226,27 +215,13 @@ export default {
   methods: {
     boundarySwitch() {
       this.isBoundaries = !this.isBoundaries;
-      this.setInUnits(this.boundaryUnits, this.sumInv);
-      this.errorStopLoss = "";
-      this.errorTakeProfit = "";
+      this.setProfitLoss();
     },
 
-    setInUsd() {
-      this.setInUnits("$", this.sumInv);
-      this.errorStopLoss = "";
-      this.errorTakeProfit = "";
-    },
-
-    setInPercent() {
-      this.setInUnits("%", this.sumInv);
-      this.errorStopLoss = "";
-      this.errorTakeProfit = "";
-    },
-
-    setInUnits(unit, value) {
-      if (unit == "$") {
-        this.takeProfit = parseInt(value * 0.3);
-        this.stopLoss = parseInt(value * 0.3);
+    setProfitLoss() {
+      if (this.boundaryUnits == "$") {
+        this.takeProfit = parseInt(this.sumInv * 0.3);
+        this.stopLoss = parseInt(this.sumInv * 0.3);
       } else {
         this.takeProfit = 30;
         this.stopLoss = 30;
@@ -328,11 +303,12 @@ export default {
     },
   },
   watch: {
-    sumInv(val) {
-      this.setInUnits(this.boundaryUnits, val);
-
-      this.errorStopLoss = "";
-      this.errorTakeProfit = "";
+    sumInv() {
+      this.setProfitLoss();
+      this.errorSumHandler()
+    },
+    boundaryUnits() {
+      this.setProfitLoss()
     },
     takeProfit() {
       this.errorTakeProfitHandler()
@@ -342,9 +318,15 @@ export default {
     },
     mult() {
       this.errorMultHandler()
+    },
+    isTakeProfit(state) {
+      if (state) { this.errorTakeProfitHandler() }
+        else { this.errorTakeProfit = '' }
+    },
+    isStopLoss(state) {
+      if (state) { this.errorStopLossHandler() }
+        else { this.errorStopLoss = '' }
     }
-
-
   },
 };
 </script>
